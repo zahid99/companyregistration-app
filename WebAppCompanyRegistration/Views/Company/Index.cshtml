@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/angular.js"></script>
+
+
+<div class="container">
+    <h3></h3>
+    <hr>
+    <div class="row" ng-app="myApp">
+        <div class="panel panel-primary filterable" ng-controller="myCntrl">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Product Details
+                </h3>
+            </div>
+            <div class="panel-body" ng-init="GetAllCompany()">
+      
+
+                <div class="divList">
+                    <p class="divHead"></p>
+                    <table cellpadding="12" class="table table-bordered table-hover">
+                        <tr>
+                            <td><b>CompanyName</b></td>
+                            <td><b>Phone</b></td>
+                            <td><b>Address</b></td>
+                            <td><b></b></td>
+                            @*<td><b>Actions</b></td>*@
+                        </tr>
+                        <tr ng-repeat="cpy in Company">
+                            <td>
+                                {{cpy.CompanyName}}
+                            </td>
+                            <td>
+                                {{cpy.Phone}}
+                            </td>
+                            <td>
+                                {{cpy.Address}}
+                            </td>
+                            <td>
+                                {{}}
+                            </td>
+                            <!--<td>-->
+                                @*<input type="text" id="pid" name="pid" value="{{pd.Id}}" />*@
+                                @*<span ng-click="RemoveProduct()" class="btn btn-danger" value="remove" id="remove-product">Delete</span>*@
+                            <!--</td>-->
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var app = angular.module("myApp", []);
+    app.controller("myCntrl", function ($scope, $http) {
+        @*debugger;*@
+        $scope.GetAllCompany = function () {
+            @*debugger;*@
+            $http({
+                method: "get",
+                url: "../Company/GetAllCompany"
+            }).then(function (response) {
+                debugger;
+                $scope.Company = response.data;
+            }, function () {
+                alert("Error");
+            })
+        };
+
+       
+    });
+</script>
+
+
+
+

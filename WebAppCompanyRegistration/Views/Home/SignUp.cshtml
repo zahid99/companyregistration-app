@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "SignUp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/angular.js"></script>
+
+
+<div class="container">
+    <h3></h3>
+    <hr>
+    <div class="row" ng-app="myApp">
+        <div class="panel panel-primary filterable" ng-controller="myCntrl">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Company Registration
+                </h3>
+            </div>
+            <div class="panel-body info">
+
+                <form action="" method="post">
+                    <div class="form-group">
+                        <label for="name">Company Name:</label>*
+                        <input type="text" class="form-control" id="name" ng-model="CName">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Company Phone no:</label>*
+                        <input type="text" class="form-control" id="phone" ng-model="CPhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Email Address:</label>
+                        <input type="email" class="form-control" id="pwd" ng-model="Email">
+                    </div>
+                    <div class="form-group" data-ng-init="init()">
+                        <label for="pwd">Country:</label>
+                        <select class="form-control" id="country" ng-model="Country">
+                            <option ng-repeat="cty in country">{{cty.Name}}</option>
+                            @*<option >{{cty.Name}}</option>
+                <option>Oman</option>
+                <option>4</option>*@
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" ng-model="Address">
+                    </div>
+
+                    @*<div class="form-group">
+                        <label for="file">Upload File:</label>
+                        <input type="file" class="form-control-file border" id="file" ng-fi>
+                    </div>*@
+
+                    <button type="submit" class="btn btn-info" value="submit" id="insert-company" ng-click="InsertCompany()">Submit</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module("myApp", []);
+    app.controller("myCntrl", function ($scope, $http) {
+
+        $scope.InsertCompany = function () {
+            debugger;
+
+            var type = document.getElementById("insert-company").getAttribute("value");
+            if (type == "submit") {
+                var Company = {
+                    CompanyName: $scope.CName,
+                    Phone: $scope.CPhone,
+                    EmailAddress: $scope.Email,
+                    Country: $scope.Country,
+                    Address: $scope.Address,
+                    File: $scope.FileName,
+
+
+                };
+                if (Company.CompanyName == null || Company.Phone == null) {
+                    alert("Name and phone must be filled out");
+                    return;
+                }
+                $http({
+                    method: "post",
+                    url: "../Home/InsertCompany",
+                    datatype: "json",
+                    data: JSON.stringify(Company)
+                }).then(function (response) {
+                    alert(response.data);
+
+                })
+            }
+        };
+        $scope.init = function () {
+            @*alert();*@
+            $http({
+                method: "get",
+                url: "../Home/GetCountry"
+            }).then(function (response) {
+                debugger;
+                $scope.country = response.data;
+                console.log(response.data);
+            }, function () {
+                alert("Error");
+            })
+        };
+
+    });
+</script>

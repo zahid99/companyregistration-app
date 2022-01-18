@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewBag.Title = "ProductList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/angular.js"></script>
+
+
+<div class="container">
+    <h3></h3>
+    <hr>
+    <div class="row" ng-app="myApp">
+        <div class="panel panel-primary filterable" ng-controller="myCntrl">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Product Details
+                </h3>
+            </div>
+            <div class="panel-body" ng-init="GetAllProducts()">
+                <br />
+                <input type="button" class="btn btn-primary" value="Add Product" ng-click="AddProductDiv()" />
+                <br />
+                <div class="row">
+                    <div class="col-md-3">
+
+                    </div>
+                    <div class="col-md-6">
+                        <div ng-show="divProduct">
+                            <p class="divHead">{{}} Product</p>
+                            <table>
+
+                                <tr>
+                                    <td><b>Name</b></td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="PName" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Description</b></td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="Description" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Price</b></td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="Price" required />
+                                    </td>
+                                </tr>
+                                @*<tr>
+            <td><b>Contact no</b></td>
+            <td>
+                <input type="text" class="form-control" ng-model="mobileno" required />
+            </td>
+        </tr>*@
+                                <tr>
+                                    <td colspan="2">
+                                        <input type="button" class="btn btn-success" value="submit" id="insert-product" ng-click="InsertProduct()" />
+                                        <input type="button" class="btn btn-danger" value="Reset" ng-click="ResetForm()" />
+                                        <input type="button" class="btn btn-default" value="Cancel" id="cancel-form" ng-click="CancelForm()" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+
+                    </div>
+                </div>
+
+                <div class="divList">
+                    <p class="divHead"></p>
+                    <table cellpadding="12" class="table table-bordered table-hover">
+                        <tr>
+                            <td><b>ReferenceNo</b></td>
+                            <td><b>Name</b></td>
+                            <td><b>Price</b></td>
+                            <td><b></b></td>
+                        </tr>
+                        <tr ng-repeat="pd in products">
+                            <td>
+                                {{pd.ReferenceNo}}
+                            </td>
+                            <td>
+                                {{pd.Name}}
+                            </td>
+                            <td>
+                                {{pd.Price}}
+                            </td>
+                            <td>
+                                {{}}
+                            </td>
+                            <!--<td>-->
+                                @*<input type="text" id="pid" name="pid" value="{{pd.Id}}" />*@
+                                <!--<span ng-click="RemoveProduct()" class="btn btn-danger" value="remove" id="remove-product">Delete</span>
+                            </td>-->
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var app = angular.module("myApp", []);
+    app.controller("myCntrl", function ($scope, $http) {
+        @*debugger;*@
+        $scope.GetAllProducts = function () {
+            @*debugger;*@
+            $http({
+                method: "get",
+                url: "../Home/GetAllProducts"
+            }).then(function (response) {
+                debugger;
+                $scope.products = response.data;
+            }, function () {
+                alert("Error");
+            })
+        };
+        $scope.AddProductDiv = function () {
+            $scope.divProduct = true;
+        };
+
+        $scope.CancelForm = function () {
+                $scope.divProduct = false;
+        };
+
+        $scope.InsertProduct = function () {
+            debugger;
+            var type = document.getElementById("insert-product").getAttribute("value");
+            if (type == "submit") {
+                @*$scope.product = [];
+                $scope.product.Name = $scope.PName;
+                $scope.product.Price = $scope.Price;*@
+                var Product = {
+                    Name: $scope.PName,
+                    Description: $scope.Description,
+                    Price: $scope.Price,
+
+                };
+                if (Product.Name == null) {
+                    alert("Name must be filled out");
+                    return;
+                }
+
+                $http({
+                    method: "post",
+                    url: "../Home/InsertProduct",
+                    datatype: "json",
+                    data: JSON.stringify(Product)
+                }).then(function (response) {
+                    alert(response.data);
+                    $scope.GetAllProducts();
+                    $scope.PName = "";
+                    $scope.Price = "";
+                    $scope.Description = "";
+                })
+            }
+        };
+        $scope.RemoveProduct = function (id) {
+            debugger;
+            var type = document.getElementsByName("remove-product").getAttribute("value");
+            if (type == "remove") {
+
+                var id = document.getElementByname("pid").getAttribute("value");
+                alert(id);
+                debugger;
+                $http({
+                    method: "post",
+                    url: "../Home/RemoveProduct",
+                    datatype: "json",
+                    @*data: JSON.stringify(id)*@
+                    params: {
+                        id: JSON.stringify(id)
+                    }
+                }).then(function (response) {
+                 
+                    $scope.GetAllProducts();
+             
+                })
+            }
+        };
+    });
+</script>
+
+

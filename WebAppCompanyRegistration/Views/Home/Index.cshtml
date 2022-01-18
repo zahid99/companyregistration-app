@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <h2></h2>
+
+            <p><a class="btn btn-default" href="../Home/ProductList">Product &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2></h2>
+            <p><a class="btn btn-default" href="../Company/Index">Company</a></p>
+        </div>
+
+    </div>}
+else
+{
+
+    <h2>Login to View Product List</h2>
+}
